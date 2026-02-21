@@ -41,20 +41,20 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-subtle">
-        <div className="animate-pulse text-muted-foreground">Cargando...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-pulse text-primary font-medium">Cargando Heal Path...</div>
       </div>
     );
   }
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-gradient-subtle">
+      <div className="min-h-screen flex w-full bg-background transition-colors duration-500">
         <AppSidebar />
-        <div className="flex-1 flex flex-col w-full">
+        <div className="flex-1 flex flex-col w-full relative">
           <Topbar />
           <main className="flex-1 overflow-y-auto">
-            <div className="container mx-auto p-6">
+            <div className="container mx-auto px-6 py-8 md:px-10 lg:px-12 max-w-[1600px] animate-in fade-in slide-in-from-bottom-4 duration-700">
               {children}
             </div>
           </main>

@@ -39,9 +39,7 @@ const navigationSections = [
     items: [
       { name: "Pacientes", href: "/patients", icon: Users, roles: ['medico', 'medico_evaluador', 'administrador'] },
       { name: "Médicos", href: "/doctors", icon: Stethoscope, roles: ['administrador', 'gestor'] },
-      { name: "Citas", href: "/appointments", icon: Calendar, roles: ['medico', 'medico_evaluador', 'administrador'] },
       { name: "Historias Clínicas", href: "/medical-records", icon: FileText, roles: ['medico', 'medico_evaluador', 'administrador'] },
-      { name: "Recetas", href: "/prescriptions", icon: Pill, roles: ['medico', 'medico_evaluador', 'administrador'] },
     ],
   },
   {
@@ -49,12 +47,6 @@ const navigationSections = [
     items: [
       { name: "Casos de Ahorro", href: "/cost-savings", icon: TrendingDown, roles: ['medico', 'medico_evaluador', 'gestor', 'administrador'] },
       { name: "Adherencia", href: "/adherence", icon: HeartPulse, roles: ['medico', 'medico_evaluador', 'gestor', 'administrador'] },
-    ],
-  },
-  {
-    section: "Configuración",
-    items: [
-      { name: "Notificaciones", href: "/notifications", icon: Bell, roles: ['paciente', 'medico', 'medico_evaluador', 'gestor', 'administrador'] },
     ],
   },
 ];
@@ -70,26 +62,40 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarContent>
+    <Sidebar collapsible="icon" className="border-r border-border/40 bg-white/80 backdrop-blur-xl">
+      <SidebarContent className="px-3 py-4">
         {navigationSections.map((section) => {
           const visibleItems = section.items.filter(item => hasAccess(item.roles));
-          
+
           if (visibleItems.length === 0) return null;
 
           return (
-            <SidebarGroup key={section.section}>
-              {!collapsed && <SidebarGroupLabel>{section.section}</SidebarGroupLabel>}
+            <SidebarGroup key={section.section} className="mb-4">
+              {!collapsed && (
+                <SidebarGroupLabel className="px-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">
+                  {section.section}
+                </SidebarGroupLabel>
+              )}
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="gap-1">
                   {visibleItems.map((item) => {
                     const isActive = location.pathname === item.href;
                     return (
                       <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
-                          <NavLink to={item.href}>
-                            <item.icon className="h-4 w-4" />
-                            <span>{item.name}</span>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive}
+                          tooltip={item.name}
+                          className={`
+                            h-10 px-4 rounded-xl transition-all duration-300
+                            ${isActive
+                              ? "bg-primary text-white shadow-lg shadow-primary/25 scale-[1.02]"
+                              : "text-foreground/70 hover:bg-primary/5 hover:text-primary"}
+                          `}
+                        >
+                          <NavLink to={item.href} className="flex items-center gap-3">
+                            <item.icon className={`h-[18px] w-[18px] transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                            <span className="font-medium text-sm">{item.name}</span>
                           </NavLink>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

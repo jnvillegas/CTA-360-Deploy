@@ -81,108 +81,129 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
             Panel de Control
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Vista general de tu centro médico
+          <p className="text-muted-foreground mt-2 text-lg">
+            Bienvenido a <span className="text-primary font-semibold">Heal Path Professional</span>
           </p>
         </div>
-
-        {/* Main Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="shadow-card hover:shadow-medium transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Pacientes</CardTitle>
-              <Users className="h-5 w-5 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalPatients}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Registrados en el sistema
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card hover:shadow-medium transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Turnos Hoy</CardTitle>
-              <Calendar className="h-5 w-5 text-accent" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.todayAppointments}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Programados para hoy
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card hover:shadow-medium transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Turnos Pendientes</CardTitle>
-              <Clock className="h-5 w-5 text-warning" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.pendingAppointments}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Próximos turnos
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card hover:shadow-medium transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Historias Clínicas</CardTitle>
-              <FileText className="h-5 w-5 text-secondary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalRecords}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Registros totales
-              </p>
-            </CardContent>
-          </Card>
+        <div className="text-sm font-medium px-4 py-2 bg-primary/5 text-primary rounded-full border border-primary/10">
+          {new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
+      </div>
 
-        {/* Today's Activity */}
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Actividad de Hoy
-            </CardTitle>
-            <CardDescription>
-              Resumen de la actividad del día
-            </CardDescription>
+      {/* Main Stats */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="uupm-card overflow-hidden group">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground/70">Total Pacientes</CardTitle>
+            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+              <Users className="h-5 w-5" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/10 border border-secondary/20">
-                <CheckCircle className="h-8 w-8 text-secondary" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.completedToday}</p>
-                  <p className="text-sm text-muted-foreground">Completados</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
-                <XCircle className="h-8 w-8 text-destructive" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.cancelledToday}</p>
-                  <p className="text-sm text-muted-foreground">Cancelados</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-warning/10 border border-warning/20">
-                <AlertCircle className="h-8 w-8 text-warning" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.noShowToday}</p>
-                  <p className="text-sm text-muted-foreground">No Asistieron</p>
-                </div>
-              </div>
+            <div className="text-4xl font-bold tracking-tighter">{stats.totalPatients}</div>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">
+              Sincronización en tiempo real
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="uupm-card overflow-hidden group">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground/70">Turnos Hoy</CardTitle>
+            <div className="p-2 rounded-lg bg-accent/20 text-accent group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+              <Calendar className="h-5 w-5" />
             </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold tracking-tighter">{stats.todayAppointments}</div>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">
+              Agenda del día de hoy
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="uupm-card overflow-hidden group">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground/70">Pendientes</CardTitle>
+            <div className="p-2 rounded-lg bg-warning/10 text-warning group-hover:bg-warning group-hover:text-white transition-colors duration-300">
+              <Clock className="h-5 w-5" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold tracking-tighter">{stats.pendingAppointments}</div>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">
+              A la espera de atención
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="uupm-card overflow-hidden group">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground/70">Hist. Clínicas</CardTitle>
+            <div className="p-2 rounded-lg bg-secondary/10 text-secondary group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
+              <FileText className="h-5 w-5" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold tracking-tighter">{stats.totalRecords}</div>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">
+              Base de datos centralizada
+            </p>
           </CardContent>
         </Card>
       </div>
+
+      {/* Today's Activity */}
+      <Card className="uupm-card border-none bg-white p-2">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+              <TrendingUp className="h-6 w-6" />
+            </div>
+            <div>
+              <CardTitle className="text-xl">Resumen de Actividad</CardTitle>
+              <CardDescription className="text-sm">Estado de las gestiones del día</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="flex items-center gap-4 p-6 rounded-2xl bg-secondary/5 border border-secondary/10 group hover:bg-secondary/10 transition-colors">
+              <div className="p-3 rounded-xl bg-secondary/10 text-secondary transition-transform group-hover:scale-110">
+                <CheckCircle className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold translate-y-0.5">{stats.completedToday}</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-secondary/70">Completados</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-6 rounded-2xl bg-destructive/5 border border-destructive/10 group hover:bg-destructive/10 transition-colors">
+              <div className="p-3 rounded-xl bg-destructive/10 text-destructive transition-transform group-hover:scale-110">
+                <XCircle className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold translate-y-0.5">{stats.cancelledToday}</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-destructive/70">Cancelados</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-6 rounded-2xl bg-warning/5 border border-warning/10 group hover:bg-warning/10 transition-colors">
+              <div className="p-3 rounded-xl bg-warning/10 text-warning transition-transform group-hover:scale-110">
+                <AlertCircle className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold translate-y-0.5">{stats.noShowToday}</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-warning/70">Inasistencias</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

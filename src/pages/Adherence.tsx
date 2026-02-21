@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -28,16 +29,16 @@ import {
 
 export default function Adherence() {
   const { canCreateAdherence } = usePermissions();
-  const { 
-    adherenceRecords, 
-    isLoading, 
+  const {
+    adherenceRecords,
+    isLoading,
     stats,
     createAdherence,
     updateAdherence,
     deleteAdherence,
     isCreating,
     isUpdating,
-    isDeleting 
+    isDeleting
   } = useAdherence();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,14 +49,14 @@ export default function Adherence() {
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
   const filteredRecords = adherenceRecords.filter(record => {
-    const matchesSearch = 
+    const matchesSearch =
       record.medication_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.patients?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.patients?.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.payer_type.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesStatus = statusFilter === "all" || record.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -94,71 +95,86 @@ export default function Adherence() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="space-y-8 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Adherencia Terapéutica</h1>
-          <p className="text-muted-foreground">
-            Gestione el seguimiento de tratamientos y alertas de medicación
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            Adherencia Terapéutica
+          </h1>
+          <p className="text-muted-foreground mt-2 text-lg">
+            Monitoreo clínico de tratamientos y gestión de stock farmacológico
           </p>
         </div>
         {canCreateAdherence && (
-          <Button onClick={() => setFormOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nuevo Registro
+          <Button
+            onClick={() => setFormOpen(true)}
+            className="h-11 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            <span className="font-semibold">Nuevo Registro</span>
           </Button>
         )}
       </div>
 
-      <AdherenceStats stats={stats} />
-
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por paciente, medicamento o cobertura..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full md:w-[200px]">
-            <SelectValue placeholder="Filtrar por estado" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos los estados</SelectItem>
-            <SelectItem value="sufficient">Stock suficiente</SelectItem>
-            <SelectItem value="warning">Stock bajo</SelectItem>
-            <SelectItem value="critical">Stock crítico</SelectItem>
-            <SelectItem value="depleted">Sin stock</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="animate-in slide-in-from-top-4 duration-1000">
+        <AdherenceStats stats={stats} />
       </div>
 
+      <Card className="uupm-card p-6">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Buscar por paciente, medicamento o tipo de cobertura..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-11 h-12 bg-muted/30 border-none rounded-xl focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full md:w-[240px] h-12 bg-muted/30 border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all">
+              <SelectValue placeholder="Estado de Adherencia" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-border/40">
+              <SelectItem value="all">Todos los estados</SelectItem>
+              <SelectItem value="sufficient">Stock suficiente</SelectItem>
+              <SelectItem value="warning">Stock bajo</SelectItem>
+              <SelectItem value="critical">Stock crítico</SelectItem>
+              <SelectItem value="depleted">Sin stock</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </Card>
+
       {isLoading ? (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-64 w-full" />
+            <Skeleton key={i} className="h-64 w-full rounded-[24px]" />
           ))}
         </div>
       ) : filteredRecords.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium">No hay registros de adherencia</h3>
-          <p className="text-muted-foreground mb-4">
-            {searchTerm || statusFilter !== "all" 
-              ? "No se encontraron registros con los filtros aplicados"
-              : "Comience agregando un nuevo registro de adherencia terapéutica"
+        <Card className="uupm-card p-12 text-center flex flex-col items-center justify-center">
+          <div className="p-4 rounded-full bg-primary/5 text-primary mb-6">
+            <AlertCircle className="h-12 w-12" />
+          </div>
+          <h3 className="text-2xl font-bold text-foreground">No se encontraron registros</h3>
+          <p className="text-muted-foreground mt-2 max-w-md mx-auto">
+            {searchTerm || statusFilter !== "all"
+              ? "Ajuste los criterios de búsqueda o filtros para visualizar otros registros de adherencia."
+              : "Comience integrando el primer registro de adherencia terapéutica para iniciar el monitoreo de stock."
             }
           </p>
           {canCreateAdherence && !searchTerm && statusFilter === "all" && (
-            <Button onClick={() => setFormOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
+            <Button
+              onClick={() => setFormOpen(true)}
+              variant="outline"
+              className="mt-8 h-12 px-8 rounded-xl font-bold transition-all hover:bg-primary hover:text-white"
+            >
+              <Plus className="h-5 w-5 mr-2" />
               Crear primer registro
             </Button>
           )}
-        </div>
+        </Card>
       ) : (
         <div className="grid gap-4">
           {filteredRecords.map((record) => (

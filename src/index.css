@@ -8,77 +8,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Medical professional palette */
-    --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    /* UUPM Telemedicine - Professional Medical Palette */
+    --background: 210 40% 99%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Medical blue - professional and trustworthy */
-    --primary: 210 100% 45%;
+    /* Medical Blue - UUPM Standard (#007AFF) */
+    --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 210 100% 55%;
-    --primary-dark: 210 100% 35%;
+    --primary-light: 211 100% 60%;
+    --primary-dark: 211 100% 40%;
 
-    /* Success green - medical positive states */
-    --secondary: 160 65% 50%;
+    /* Healing Teal - UUPM Success (#10B981) */
+    --secondary: 160 84% 39%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted grays for professional look */
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 50%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
     /* Accent blue for highlights */
-    --accent: 200 90% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 211 100% 95%;
+    --accent-foreground: 211 100% 50%;
 
     /* Warning and error states */
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    
+
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders and inputs */
-    --border: 210 20% 88%;
-    --input: 210 20% 92%;
-    --ring: 210 100% 45%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 211 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 1.25rem;
 
-    /* Sidebar navigation */
-    --sidebar-background: 215 30% 97%;
-    --sidebar-foreground: 215 25% 25%;
-    --sidebar-primary: 210 100% 45%;
+    /* Sidebar navigation - Glass / Light */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 92%;
-    --sidebar-accent-foreground: 215 25% 25%;
-    --sidebar-border: 210 20% 88%;
-    --sidebar-ring: 210 100% 45%;
+    --sidebar-accent: 211 100% 96%;
+    --sidebar-accent-foreground: 211 100% 50%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 211 100% 50%;
 
-    /* Chart colors */
-    --chart-1: 210 100% 50%;
-    --chart-2: 160 65% 50%;
-    --chart-3: 38 92% 50%;
-    --chart-4: 270 60% 55%;
-    --chart-5: 0 84% 60%;
-
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 100% 45%), hsl(210 100% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(210 100% 40%), hsl(200 90% 50%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
-
-    /* Shadows */
-    --shadow-soft: 0 2px 10px -2px hsl(210 100% 45% / 0.15);
-    --shadow-medium: 0 8px 24px -4px hsl(210 100% 45% / 0.2);
-    --shadow-card: 0 4px 16px -2px hsl(210 20% 40% / 0.08);
+    /* Shadows UUPM Pro Max */
+    --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 12px 30px -10px rgba(0, 0, 0, 0.04);
 
     /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -128,6 +116,12 @@ All colors MUST be HSL.
   }
 }
 
+@layer utilities {
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -135,5 +129,17 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .uupm-glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-soft;
+  }
+
+  .uupm-card {
+    @apply bg-white rounded-[24px] border border-border/50 shadow-card transition-smooth hover:shadow-medium;
+  }
+
+  .uupm-sidebar-item {
+    @apply rounded-xl transition-smooth hover:bg-primary/5 hover:text-primary active:scale-95;
   }
 }

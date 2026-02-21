@@ -101,7 +101,7 @@ export default function Patients() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validations
     if (formData.is_judicial_case && !formData.judicial_file_number) {
       toast.error("El número de expediente es requerido para casos judicializados");
@@ -249,22 +249,22 @@ export default function Patients() {
       p.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.document_number.includes(searchTerm);
-    
+
     const matchesJudicialFilter = !showJudicialOnly || p.is_judicial_case;
-    
+
     return matchesSearch && matchesJudicialFilter;
   });
 
   const getInsuranceStatusBadge = (status: string | null) => {
     if (!status) return null;
-    
+
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
       activo: "default",
       suspendido: "secondary",
       baja: "destructive",
       pendiente: "outline",
     };
-    
+
     return (
       <Badge variant={variants[status] || "outline"}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -273,24 +273,24 @@ export default function Patients() {
   };
 
   return (
-    <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Gestión de Pacientes
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Administra la información de tus pacientes
-            </p>
-          </div>
-          {canCreatePatient && (
-            <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nuevo Paciente
-                </Button>
-              </DialogTrigger>
+    <div className="space-y-8 animate-in fade-in duration-700">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            Gestión de Pacientes
+          </h1>
+          <p className="text-muted-foreground mt-2 text-lg">
+            Administración centralizada de la base de datos de salud
+          </p>
+        </div>
+        {canCreatePatient && (
+          <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
+            <DialogTrigger asChild>
+              <Button className="h-11 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <Plus className="w-5 h-5 mr-2" />
+                <span className="font-semibold">Nuevo Paciente</span>
+              </Button>
+            </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
@@ -324,7 +324,7 @@ export default function Patients() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Nombre</Label>
@@ -343,7 +343,7 @@ export default function Patients() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Fecha de Nacimiento</Label>
@@ -371,7 +371,7 @@ export default function Patients() {
                     </Select>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Email</Label>
                   <Input
@@ -380,7 +380,7 @@ export default function Patients() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Teléfono</Label>
@@ -400,7 +400,7 @@ export default function Patients() {
 
                 <div className="pt-4 border-t">
                   <h3 className="text-lg font-semibold mb-4">Información de Cobertura</h3>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Obra Social</Label>
@@ -452,7 +452,7 @@ export default function Patients() {
                       <Checkbox
                         id="auth-required"
                         checked={formData.insurance_authorization_required}
-                        onCheckedChange={(checked) => 
+                        onCheckedChange={(checked) =>
                           setFormData({ ...formData, insurance_authorization_required: checked as boolean })
                         }
                       />
@@ -593,131 +593,123 @@ export default function Patients() {
               </form>
             </DialogContent>
           </Dialog>
-          )}
-        </div>
+        )}
+      </div>
 
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Search className="w-5 h-5" />
-              Buscar Pacientes
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <Card className="uupm-card p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="relative flex-1 max-w-md group">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Buscar por nombre, apellido o documento..."
+              placeholder="Buscar por nombre, apellido o DNI..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-md"
+              className="pl-11 h-12 bg-muted/30 border-none rounded-xl focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
             />
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="judicial-filter"
-                checked={showJudicialOnly}
-                onCheckedChange={(checked) => setShowJudicialOnly(checked as boolean)}
-              />
-              <label
-                htmlFor="judicial-filter"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Mostrar solo casos judicializados
-              </label>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-2 bg-muted/20 rounded-xl border border-border/50">
+            <Checkbox
+              id="judicial-filter"
+              checked={showJudicialOnly}
+              onCheckedChange={(checked) => setShowJudicialOnly(checked as boolean)}
+              className="rounded-md border-muted-foreground/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />
+            <label
+              htmlFor="judicial-filter"
+              className="text-sm font-semibold text-muted-foreground cursor-pointer select-none"
+            >
+              Solo casos judicializados
+            </label>
+          </div>
+        </div>
+      </Card>
+
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">Cargando pacientes...</div>
+      ) : filteredPatients.length === 0 ? (
+        <Card className="shadow-card">
+          <CardContent className="text-center py-12">
+            <User className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground">No hay pacientes registrados</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="uupm-card overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="bg-muted/30">
+                  <TableRow className="border-border/40 hover:bg-transparent">
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px]">Nombre Completo</TableHead>
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px]">Documento</TableHead>
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px]">Cobertura</TableHead>
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px]">Email</TableHead>
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px]">Teléfono</TableHead>
+                    <TableHead className="py-4 px-6 font-bold text-muted-foreground uppercase tracking-widest text-[10px] text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredPatients.map((patient) => (
+                    <TableRow key={patient.id} className="border-border/40 hover:bg-primary/[0.02] transition-colors group">
+                      <TableCell className="py-4 px-6 font-medium">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:scale-110 transition-transform duration-300">
+                            <User className="w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                              {patient.first_name} {patient.last_name}
+                            </span>
+                            {patient.is_judicial_case && (
+                              <Badge className="w-fit h-5 px-1.5 py-0 text-[9px] bg-red-50 text-red-600 border-red-100 hover:bg-red-100 mt-1 uppercase font-black">
+                                Judicializado
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 px-6 font-mono text-xs text-muted-foreground">{patient.document_number}</TableCell>
+                      <TableCell className="py-4 px-6">
+                        {patient.insurance_status ? (
+                          getInsuranceStatusBadge(patient.insurance_status)
+                        ) : (
+                          <span className="text-muted-foreground/30">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-4 px-6 text-sm text-muted-foreground">{patient.email || <span className="text-muted-foreground/30">—</span>}</TableCell>
+                      <TableCell className="py-4 px-6 text-sm text-muted-foreground font-medium">{patient.mobile_phone || patient.phone || <span className="text-muted-foreground/30">—</span>}</TableCell>
+                      <TableCell className="py-4 px-6 text-right">
+                        <div className="flex justify-end gap-2">
+                          {canUpdatePatient && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(patient)}
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-primary hover:text-white transition-all shadow-none"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {canDeletePatient && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDeleteClick(patient)}
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-destructive hover:text-white transition-all shadow-none"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
-
-        {loading ? (
-          <div className="text-center py-12 text-muted-foreground">Cargando pacientes...</div>
-        ) : filteredPatients.length === 0 ? (
-          <Card className="shadow-card">
-            <CardContent className="text-center py-12">
-              <User className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground">No hay pacientes registrados</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="shadow-card">
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nombre Completo</TableHead>
-                      <TableHead>Documento</TableHead>
-                      <TableHead>Cobertura</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Teléfono</TableHead>
-                      <TableHead className="text-right">Acciones</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredPatients.map((patient) => (
-                      <TableRow key={patient.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <User className="w-4 h-4 text-primary" />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {patient.first_name} {patient.last_name}
-                              {patient.is_judicial_case && (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger>
-                                      <Scale className="w-4 h-4 text-red-600" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Caso judicializado</p>
-                                      {patient.judicial_file_number && (
-                                        <p className="text-xs">Expediente: {patient.judicial_file_number}</p>
-                                      )}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{patient.document_number}</TableCell>
-                        <TableCell>
-                          {patient.insurance_status ? (
-                            getInsuranceStatusBadge(patient.insurance_status)
-                          ) : (
-                            "-"
-                          )}
-                        </TableCell>
-                        <TableCell>{patient.email || "-"}</TableCell>
-                        <TableCell>{patient.mobile_phone || patient.phone || "-"}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            {canUpdatePatient && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEdit(patient)}
-                              >
-                                <Pencil className="w-4 h-4" />
-                              </Button>
-                            )}
-                            {canDeletePatient && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDeleteClick(patient)}
-                              >
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                              </Button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      )}
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
@@ -740,6 +732,6 @@ export default function Patients() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      </div>
+    </div>
   );
 }

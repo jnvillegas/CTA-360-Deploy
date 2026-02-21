@@ -112,13 +112,13 @@ export default function CostSavingsCases() {
   };
 
   const filteredCases = cases.filter((c) => {
-    const matchesSearch = 
+    const matchesSearch =
       c.diagnosis.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.intervention_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (c.patients && `${c.patients.first_name} ${c.patients.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+
     const matchesStatus = statusFilter === "all" || c.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -128,20 +128,23 @@ export default function CostSavingsCases() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-8 animate-in fade-in duration-700">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
             Casos de Ahorro de Costos
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Gestión de optimización de costos médicos
+          <p className="text-muted-foreground mt-2 text-lg">
+            Monitoreo y optimización financiera de consumos médicos
           </p>
         </div>
         {canCreateCase && (
-          <Button onClick={() => setWizardOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Nuevo Caso
+          <Button
+            onClick={() => setWizardOpen(true)}
+            className="h-11 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            <span className="font-semibold">Nuevo Caso</span>
           </Button>
         )}
       </div>
@@ -154,33 +157,31 @@ export default function CostSavingsCases() {
       />
 
       {/* Filters */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Search className="w-5 h-5" />
-              Buscar Casos
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="uupm-card p-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
+              <Search className="w-4 h-4" /> Buscar Intervenciones
+            </h3>
             <Input
-              placeholder="Buscar por diagnóstico, intervención o paciente..."
+              placeholder="Paciente, diagnóstico o tipo de intervención..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-12 bg-muted/30 border-none rounded-xl focus-visible:ring-2 focus-visible:ring-primary/20 transition-all mt-2"
             />
-          </CardContent>
+          </div>
         </Card>
 
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg">Filtrar por Estado</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <Card className="uupm-card p-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
+              <TrendingDown className="w-4 h-4" /> Estado de Gestión
+            </h3>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all mt-2">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl border-border/40">
                 <SelectItem value="all">Todos los estados</SelectItem>
                 <SelectItem value="en_evaluacion">En Evaluación</SelectItem>
                 <SelectItem value="intervenido">Intervenido</SelectItem>
@@ -188,7 +189,7 @@ export default function CostSavingsCases() {
                 <SelectItem value="sin_optimizacion">Sin Optimización</SelectItem>
               </SelectContent>
             </Select>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
@@ -203,125 +204,123 @@ export default function CostSavingsCases() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {filteredCases.map((caseItem) => {
             const savingsLevel = getSavingsLevel(caseItem.savings_percentage);
             const savingsStyle = savingsColors[savingsLevel];
-            
+
             return (
-            <Card 
-              key={caseItem.id} 
-              className={`shadow-card hover:shadow-medium transition-all border-l-4 ${savingsStyle.border}`}
-            >
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  {/* Header with Traffic Light */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                        <h3 className="font-semibold truncate">
-                          {caseItem.patients ? 
-                            `${caseItem.patients.first_name} ${caseItem.patients.last_name}` : 
-                            'Paciente no encontrado'
-                          }
-                        </h3>
-                        {caseItem.patients?.is_judicial_case && (
-                          <Badge variant="destructive" className="flex items-center gap-1 ml-1">
-                            <Scale className="w-3 h-3" />
-                            Judicial
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {caseItem.diagnosis}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge className={statusColors[caseItem.status]}>
-                        {statusLabels[caseItem.status]}
-                      </Badge>
-                      {/* Traffic Light Indicator */}
-                      <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${savingsStyle.badge}`}>
-                        <div className={`w-2 h-2 rounded-full ${savingsStyle.bg}`} />
-                        <span className="text-xs font-medium">{savingsStyle.label}</span>
-                        {caseItem.savings_percentage !== null && (
-                          <span className="text-xs">({caseItem.savings_percentage.toFixed(0)}%)</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Intervention Type */}
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">{caseItem.intervention_type}</span>
-                    {caseItem.intervention_date && (
-                      <span className="text-muted-foreground">
-                        - {new Date(caseItem.intervention_date).toLocaleDateString('es-AR')}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Costs */}
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Costo Inicial</p>
-                      <p className="font-semibold flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        {formatCurrency(caseItem.initial_monthly_cost)}/mes
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Costo Actual</p>
-                      <p className={`font-semibold flex items-center gap-1 ${caseItem.current_monthly_cost && caseItem.current_monthly_cost < caseItem.initial_monthly_cost ? savingsStyle.text : ''}`}>
-                        <DollarSign className="w-4 h-4" />
-                        {formatCurrency(caseItem.current_monthly_cost)}/mes
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Savings */}
-                  {caseItem.monthly_savings !== null && (
-                    <div className={`pt-4 border-t -mx-6 -mb-6 p-4 rounded-b-lg ${savingsLevel === 'high' ? 'bg-green-500/5' : savingsLevel === 'medium' ? 'bg-yellow-500/5' : 'bg-red-500/5'}`}>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-1">Ahorro Mensual</p>
-                          <p className={`font-bold flex items-center gap-1 ${savingsStyle.text}`}>
-                            <TrendingDown className="w-4 h-4" />
-                            {formatCurrency(caseItem.monthly_savings)}
-                          </p>
+              <Card
+                key={caseItem.id}
+                className={`uupm-card overflow-hidden group hover:scale-[1.01] transition-all border-l-[6px] ${savingsStyle.border}`}
+              >
+                <CardContent className="p-0">
+                  <div className="p-6 space-y-5">
+                    {/* Header with Traffic Light */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <h3 className="font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                            {caseItem.patients ?
+                              `${caseItem.patients.first_name} ${caseItem.patients.last_name}` :
+                              'Paciente no encontrado'
+                            }
+                          </h3>
+                          {caseItem.patients?.is_judicial_case && (
+                            <Badge className="bg-red-50 text-red-600 border-red-100 uppercase text-[9px] font-black tracking-widest px-1.5 h-5">
+                              Judicial
+                            </Badge>
+                          )}
                         </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-1">Ahorro Proyectado</p>
-                          <p className={`font-bold ${savingsStyle.text}`}>
-                            {formatCurrency(caseItem.projected_savings)}
+                        <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                          {caseItem.diagnosis}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end gap-3">
+                        <Badge className={`${statusColors[caseItem.status]} rounded-md font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 border`}>
+                          {statusLabels[caseItem.status]}
+                        </Badge>
+                        {/* Traffic Light Indicator */}
+                        <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg ${savingsStyle.badge} border`}>
+                          <div className={`w-2 h-2 rounded-full ${savingsStyle.bg} animate-pulse`} />
+                          <span className="text-[10px] font-black uppercase tracking-widest">{savingsStyle.label}</span>
+                          {caseItem.savings_percentage !== null && (
+                            <span className="text-xs font-bold font-mono">({caseItem.savings_percentage.toFixed(0)}%)</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Intervention Type */}
+                    <div className="flex items-center gap-2 text-[13px] text-muted-foreground bg-muted/30 w-fit px-3 py-1.5 rounded-lg border border-border/40">
+                      <Calendar className="w-4 h-4 text-primary" />
+                      <span className="font-bold text-foreground/80">{caseItem.intervention_type}</span>
+                      {caseItem.intervention_date && (
+                        <span className="font-medium opacity-60">
+                          {new Date(caseItem.intervention_date).toLocaleDateString('es-AR')}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Costs */}
+                    <div className="grid grid-cols-2 gap-4 pb-1">
+                      <div className="bg-muted/20 p-3 rounded-xl border border-border/30">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Costo Inicial</p>
+                        <p className="font-bold text-lg flex items-center gap-1 text-foreground">
+                          {formatCurrency(caseItem.initial_monthly_cost)}
+                          <span className="text-[10px] opacity-40 font-normal ml-0.5">/mes</span>
+                        </p>
+                      </div>
+                      <div className="bg-muted/20 p-3 rounded-xl border border-border/30">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Costo Actual</p>
+                        <p className={`font-bold text-lg flex items-center gap-1 ${caseItem.current_monthly_cost && caseItem.current_monthly_cost < caseItem.initial_monthly_cost ? savingsStyle.text : 'text-foreground'}`}>
+                          {formatCurrency(caseItem.current_monthly_cost)}
+                          <span className="text-[10px] opacity-40 font-normal ml-0.5">/mes</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Savings */}
+                    {caseItem.monthly_savings !== null && (
+                      <div className={`p-5 rounded-2xl border-2 border-dashed ${savingsLevel === 'high' ? 'bg-green-50/30 border-green-200' : savingsLevel === 'medium' ? 'bg-yellow-50/30 border-yellow-200' : 'bg-red-50/30 border-red-200'}`}>
+                        <div className="grid grid-cols-2 gap-6">
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-1">Ahorro Mensual</p>
+                            <p className={`text-2xl font-black flex items-center gap-2 ${savingsStyle.text}`}>
+                              <TrendingDown className="w-6 h-6" />
+                              {formatCurrency(caseItem.monthly_savings)}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-1">Proyección</p>
+                            <p className={`text-2xl font-black ${savingsStyle.text}`}>
+                              {formatCurrency(caseItem.projected_savings)}
+                            </p>
                             {caseItem.savings_percentage !== null && (
-                              <span className="text-sm ml-1">
-                                ({caseItem.savings_percentage.toFixed(1)}%)
-                              </span>
+                              <Badge className={`${savingsStyle.badge} border-none font-black text-[10px] h-5 mt-1`}>
+                                {caseItem.savings_percentage.toFixed(1)}% OPTIMIZADO
+                              </Badge>
                             )}
-                          </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {/* Actions */}
-                  <div className="pt-4 border-t">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full"
+                    )}
+
+                    {/* Actions */}
+                    <Button
+                      variant="link"
+                      className="w-full text-primary font-bold hover:no-underline group/btn"
                       onClick={() => navigate(`/cost-savings/${caseItem.id}`)}
                     >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Ver Detalles
+                      VER FICHA TÉCNICA DETALLADA
+                      <Eye className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
             );
           })}
         </div>

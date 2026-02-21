@@ -6,8 +6,8 @@ import logo from "@/assets/logo.png";
 
 export function Topbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-      <div className="flex h-16 items-center gap-4 px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/70 backdrop-blur-xl transition-all">
+      <div className="flex h-16 items-center gap-6 px-6">
         {/* Left section: Logo and Sidebar Toggle */}
         <div className="flex items-center gap-3">
           <SidebarTrigger className="-ml-1" />
